@@ -55,9 +55,8 @@ export class SimpleFaker {
       return this.callbackTypes[name].bind(this);
   }
 
-  addType(name: string, fn: FakeFunction): SimpleFaker {
+  addType(name: string, fn: FakeFunction): void {
     this.callbackTypes[name.toLowerCase()] = fn;
-    return this;
   }
 
   fakeDate(
@@ -101,10 +100,12 @@ export class SimpleFaker {
   }
 
   fakeInteger(min: number = 1, max: number = 1000000): number {
+    if (min > max) max = min + 1000000;
     return this.faker.datatype.number({ min, max });
   }
 
   fakeFloat(min: number = 1, max: number = 1000000): number {
+    if (min > max) max = min + 1000000;
     return this.faker.datatype.float({ min, max });
   }
 
@@ -167,8 +168,8 @@ export class SimpleFaker {
       throw new TypeError("Invalid type: " + JSON.stringify(dataType));
 
     /* type format: "internet.url", "address.cityName", or "name.jobTitle" */
-    let m = dataType.match(/^\s*([a-z]+)\.([a-z]+)\s*$/i);
-    if (m) {
+    let m = dataType.match(/^\s*([a-z0-9]+)\.([a-z0-9]+)\s*$/i);
+    if (m && m[1] !== 'mersenne') {//ignore mersenne
       if (!this.faker.hasOwnProperty(m[1]) || !this.faker[m[1]])
         throw new TypeError("Invalid type: " + dataType);
 
@@ -192,7 +193,7 @@ export class SimpleFaker {
     }
 
     /* simple type format: "string(3,5)", "paragraphs(1,3)", "integer(5,70)", or "boolean" */
-    m = dataType.match(/^\s*([a-z]+)\s*(\((\d+),\s*(\d+)\))?\s*$/i);
+    m = dataType.match(/^\s*([a-z0-9]+)\s*(\((-?\d+),\s*(-?\d+)\))?\s*$/i);
     if (!m) {
       throw new TypeError("Invalid type: " + dataType);
     }
@@ -204,8 +205,8 @@ export class SimpleFaker {
     const rand = isRange ? this.fakeInteger(min, max) : 0;
 
     /* callback customized type */
-    const cb = this.getCallbackType(m[1]);
-    if (cb && typeof cb === "function") return isRange ? cb(min, max) : cb();
+    const cb = this.getCallbackType(t);
+    if (typeof cb === "function") return isRange ? cb(min, max) : cb();
 
     /* This faker type */
     const funcName = ("fake" +
