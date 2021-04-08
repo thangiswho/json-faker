@@ -1,5 +1,5 @@
 {
-  "name": "simple-faker",
+  "name": "@thangiswho/simple-faker",
   "version": "1.0.0",
   "description": "simple-faker generates massive amount of json fake data with zero coding",
   "main": "./dist/index.js",

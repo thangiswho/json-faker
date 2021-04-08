@@ -9,9 +9,9 @@ Install simple-faker
 
 ```bash
 # Using yarn
-yarn add simple-faker
+yarn add @thangiswho/simple-faker
 # Using npm
-npm install simple-faker
+npm install @thangiswho/simple-faker
 ```
 
 **Typescript Usage**
