@@ -132,8 +132,8 @@ faker.fake("html(2,4)"); // return a fake html paragraphs with number of paragra
 **Usage**: faker.fake(`${type}`) or faker.fake(`${group}.${type}`).
 With some specific types which have one numeric argument, such as words, paragraphs, you can use the following api:
 ```javascript
-faker.fake(`typename(${type},${max})`)
-faker.fake(`group.typename(${type},${max})`)
+faker.fake(`typename(${min},${max})`)
+faker.fake(`group.typename(${min},${max})`)
 ```
 
 Basically, simple-faker try to find all grand-children properties of faker.js, it will call faker.js if there is any grand-child properties found
@@ -203,20 +203,15 @@ faker.fakeApi({
     "id": "integer",
     "title": "lorem.phrase",
     "content": "html(5,8)",
-    "category": "MyCategory", // great, I can add my own customized type
+    "category": "mycategory", // great, I can add my own customized type
   },
   "Salary": {
     "net": "integer(100000,120000)",
-    "tax": "mytax"
+    "tax": "mytax"  // great, I can add my own customized type
   }
 });
 ```
 ## API Methods
-
-### SimpleFaker class
-- fake: *faker.fake(dataType)* to fake a single data type
-- fakeSchema: *faker.fakeSchema(objectType)* to fake a whole object
-- fakeApi: *faker.fakeApi(apiSchema)* to run mockup json-server
 
 ### .bin/fake-data command
 ```bash
@@ -240,3 +235,248 @@ Then, run a mockup jsons-server
 json-server mockupdb.json
 ```
 
+### SimpleFaker class
+- fake: *faker.fake(dataType)* to fake a single data type
+- fakeSchema: *faker.fakeSchema(objectType)* to fake a whole object
+- fakeApi: *faker.fakeApi(apiSchema)* to run mockup json-server
+
+### SimpleFaker.fake(dataType) Types list
+You can define your schema type with any type from the following types.
+```javascript
+// schema.json
+{
+  "Api1": {
+    "prop": "type",
+    "prop": "type(min,max)"
+  },
+  "Api2": {
+    "prop": "type",
+    "prop": "group.type",
+    "prop": "group.type(min,max)"
+  }
+}
+```
+
+- integer
+- float
+- boolean
+- string
+- date
+- time
+- datetime
+- image
+- name
+- username
+- html
+
+- random.number
+- random.float
+- random.arrayElement
+- random.arrayElements
+- random.objectElement
+- random.uuid
+- random.boolean
+- random.word
+- random.words
+- random.image
+- random.locale
+- random.alpha
+- random.alphaNumeric
+- random.hexaDecimal
+- helpers.randomize
+- helpers.slugify
+- helpers.replaceSymbolWithNumber
+- helpers.replaceSymbols
+- helpers.replaceCreditCardSymbols
+- helpers.repeatString
+- helpers.regexpStyleStringParse
+- helpers.shuffle
+- helpers.mustache
+- helpers.createCard
+- helpers.contextualCard
+- helpers.userCard
+- helpers.createTransaction
+- name.firstName
+- name.lastName
+- name.middleName
+- name.findName
+- name.jobTitle
+- name.gender
+- name.prefix
+- name.suffix
+- name.title
+- name.jobDescriptor
+- name.jobArea
+- name.jobType
+- address.zipCode
+- address.zipCodeByState
+- address.city
+- address.cityPrefix
+- address.citySuffix
+- address.cityName
+- address.streetName
+- address.streetAddress
+- address.streetSuffix
+- address.streetPrefix
+- address.secondaryAddress
+- address.county
+- address.country
+- address.countryCode
+- address.state
+- address.stateAbbr
+- address.latitude
+- address.longitude
+- address.direction
+- address.cardinalDirection
+- address.ordinalDirection
+- address.nearbyGPSCoordinate
+- address.timeZone
+- animal.dog
+- animal.cat
+- animal.snake
+- animal.bear
+- animal.lion
+- animal.cetacean
+- animal.horse
+- animal.bird
+- animal.cow
+- animal.fish
+- animal.crocodilia
+- animal.insect
+- animal.rabbit
+- animal.type
+- company.suffixes
+- company.companyName
+- company.companySuffix
+- company.catchPhrase
+- company.bs
+- company.catchPhraseAdjective
+- company.catchPhraseDescriptor
+- company.catchPhraseNoun
+- company.bsAdjective
+- company.bsBuzz
+- company.bsNoun
+- finance.account
+- finance.accountName
+- finance.routingNumber
+- finance.mask
+- finance.amount
+- finance.transactionType
+- finance.currencyCode
+- finance.currencyName
+- finance.currencySymbol
+- finance.bitcoinAddress
+- finance.litecoinAddress
+- finance.creditCardNumber
+- finance.creditCardCVV
+- finance.ethereumAddress
+- finance.iban
+- finance.bic
+- finance.transactionDescription
+- image.image
+- image.avatar
+- image.imageUrl
+- image.abstract
+- image.animals
+- image.business
+- image.cats
+- image.city
+- image.food
+- image.nightlife
+- image.fashion
+- image.people
+- image.nature
+- image.sports
+- image.technics
+- image.transport
+- image.dataUri
+- lorem.word
+- lorem.words
+- lorem.sentence
+- lorem.slug
+- lorem.sentences
+- lorem.paragraph
+- lorem.paragraphs
+- lorem.text
+- lorem.lines
+- hacker.abbreviation
+- hacker.adjective
+- hacker.noun
+- hacker.verb
+- hacker.ingverb
+- hacker.phrase
+- internet.avatar
+- internet.email
+- internet.exampleEmail
+- internet.userName
+- internet.protocol
+- internet.httpMethod
+- internet.url
+- internet.domainName
+- internet.domainSuffix
+- internet.domainWord
+- internet.ip
+- internet.ipv6
+- internet.port
+- internet.userAgent
+- internet.color
+- internet.mac
+- internet.password
+- database.column
+- database.type
+- database.collation
+- database.engine
+- phone.phoneNumber
+- phone.phoneNumberFormat
+- phone.phoneFormats
+- date.past
+- date.future
+- date.between
+- date.betweens
+- date.recent
+- date.soon
+- date.month
+- date.weekday
+- time.recent
+- commerce.color
+- commerce.department
+- commerce.productName
+- commerce.price
+- commerce.productAdjective
+- commerce.productMaterial
+- commerce.product
+- commerce.productDescription
+- system.fileName
+- system.commonFileName
+- system.mimeType
+- system.commonFileType
+- system.commonFileExt
+- system.fileType
+- system.fileExt
+- system.directoryPath
+- system.filePath
+- system.semver
+- git.branch
+- git.commitEntry
+- git.commitMessage
+- git.commitSha
+- git.shortSha
+- vehicle.vehicle
+- vehicle.manufacturer
+- vehicle.model
+- vehicle.type
+- vehicle.fuel
+- vehicle.vin
+- vehicle.color
+- vehicle.vrm
+- vehicle.bicycle
+- music.genre
+- datatype.number
+- datatype.float
+- datatype.datetime
+- datatype.string
+- datatype.uuid
+- datatype.boolean
+- datatype.hexaDecimal
+- datatype.json
+- datatype.array
