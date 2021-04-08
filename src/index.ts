@@ -1,3 +1,1 @@
-import { SimpleFaker } from "./simple-faker";
-
-export default SimpleFaker;
+export { SimpleFaker, Schema, ApiSchema, FakeFunction } from "./simple-faker";

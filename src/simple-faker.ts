@@ -1,10 +1,10 @@
 type SchemaValue = string | number | boolean | object;
 
-interface Schema {
+export interface Schema {
   [prop: string]: SchemaValue | Schema;
 }
 
-interface ApiSchema {
+export interface ApiSchema {
   [prop: string]: Schema;
 }
 
@@ -12,7 +12,7 @@ interface ApiSchemaValue {
   [prop: string]: Schema[];
 }
 
-type FakeFunction = (prop1?: number, prop2?: number) => SchemaValue;
+export type FakeFunction = (prop1?: number, prop2?: number) => SchemaValue;
 
 interface FakeTypes {
   [typeName: string]: FakeFunction;
@@ -169,13 +169,13 @@ export class SimpleFaker {
 
     /* type format: "internet.url", "address.cityName", or "name.jobTitle" */
     let m = dataType.match(/^\s*([a-z0-9]+)\.([a-z0-9]+)\s*$/i);
-    if (m && m[1] !== 'mersenne') {//ignore mersenne
+    if (m && m[1] !== "mersenne") {
+      // ignore mersenne
       if (!this.faker.hasOwnProperty(m[1]) || !this.faker[m[1]])
         throw new TypeError("Invalid type: " + dataType);
 
       if (typeof this.faker[m[1]][m[2]] !== "function")
         throw new TypeError("Invalid type: " + dataType);
-
       try {
         return this.faker[m[1]][m[2]]();
       } catch (e) {
