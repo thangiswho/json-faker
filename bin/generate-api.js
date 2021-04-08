@@ -6,9 +6,9 @@ const README_FILE = "README.md";
 const { SimpleFaker } = require("../dist");
 const faker = new SimpleFaker();
 
-let readme = fs.readFileSync(
-  path.resolve(__dirname, "..", "." + README_FILE)
-).toString();
+let readme = fs
+  .readFileSync(path.resolve(__dirname, "..", "." + README_FILE))
+  .toString();
 
 let apis = [];
 for (const [prop, obj] of Object.entries(faker.faker)) {
@@ -24,8 +24,5 @@ for (const [prop, obj] of Object.entries(faker.faker)) {
 
 readme = readme.replace("{{FakerJS.Types}}", apis);
 
-fs.writeFileSync(
-  path.resolve(__dirname, "..", README_FILE),
-  readme
-);
+fs.writeFileSync(path.resolve(__dirname, "..", README_FILE), readme);
 console.log("Generte-api done!");
