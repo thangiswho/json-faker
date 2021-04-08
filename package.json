@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "simple-faker generates massive amount of json fake data with zero coding",
   "main": "./dist/index.js",
+  "bin": {"fake-data": "./bin/fake-data.js"},
   "types": "./dist/index.d.ts",
   "scripts": {
     "watch": "tsc --watch",
     "clean": "rm -rf dist",
     "build:lint": "tslint -p tsconfig.json",
-    "build:format": "prettier --write \"**/*.ts\"",
+    "build:format": "prettier --write \"**/*.ts\" \"**/*.js\"",
     "build:compile": "tsc",
     "build": "npm-run-all --serial clean build:*",
     "test": "jest",
@@ -22,8 +23,8 @@
     "url": "git+https://github.com/thangiswho/simple-faker.git"
   },
   "files": [
-    "dist/",
-    "bin/"
+    "dist",
+    "bin"
   ],
   "keywords": [
     "json",
@@ -48,6 +49,7 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "faker": "^5.5.2"
+    "faker": "^5.5.2",
+    "yargs": "^16.2.0"
   }
 }
