@@ -1,0 +1,51 @@
+{
+  "User": {
+    "id": "integer",
+    "username": "username(6,20)",
+    "email": "email",
+    "first_name": "name.firstName",
+    "last_name": "name.lastName",
+    "password": "password",
+    "last_login": "datetime",
+    "gender": "gender",
+    "message": "sentences(2,5)",
+    "about": "html(1,3)"
+  },
+  "News": {
+    "id": "integer(100000,999999)",
+    "title": "phrase",
+    "publisher": "words(1,3)",
+    "published_at": "datetime",
+    "image": "image",
+    "summary": "paragraphs(1,3)",
+    "content": "html(3,10)",
+    "category": "words(1,2)"
+  },
+  "Comment": {
+    "comment": "{{lorem.sentence}}<br/><p>{{lorem.paragraphs}}</p>",
+    "liked": "integer(0,500)",
+    "created_at": "datetime",
+    "userID": "integer(1000000,9999999)",
+    "username": "name"
+  },
+  "Post": {
+    "title": "phrase",
+    "author": "name",
+    "authorID": "username",
+    "avatar": "avatar",
+    "content": "html(3,10)",
+    "views": "integer(0,5000)",
+    "published": "boolean",
+    "created_at": "date",
+    "tags": ["word", "words(1,1)"],
+    "authorInfo": {
+      "about": "Hello, my name is {{name.firstName}}. I was born in {{address.cityName}}.",
+      "avatar": "avatar"
+    }
+  },
+  "Error": {
+    "code": "integer(200,500)",
+    "message": "phrase",
+    "type": "database.type"
+  }
+}

@@ -1,13 +1,12 @@
-import { SimpleFaker } from "../src";
-
-const faker = new SimpleFaker("en", 2);
+import { FakeFunction, SimpleFaker } from "../src";
 
 test("callback type", () => {
+  const faker = new SimpleFaker("en", 2);
+  const anotherFaker = new SimpleFaker("en", 10);
+
   expect(() => faker.fake("MyCategory")).toThrow(TypeError);
   expect(() => faker.fake("MyInteger")).toThrow(TypeError);
   expect(() => faker.fake("MyInteger2")).toThrow(TypeError);
-
-  const anotherFaker = new SimpleFaker("en", 10);
   const categories = [
     faker.fake("string"),
     faker.fakeString(),
@@ -32,4 +31,17 @@ test("callback type", () => {
   expect(anotherFaker.fake("MyInteger2")).toBe(3);
   expect(anotherFaker.fake("MyInteger(106,106)")).toBe(106);
   expect(anotherFaker.fake("MyInteger2(5,10)")).toBe(5 + 10);
+});
+
+test("callback type", () => {
+  const faker = new SimpleFaker("fr", 2);
+
+  expect(() => faker.fake("ErrorType")).toThrow(TypeError);
+  faker.addType("ErrorType", () => {
+    const t = faker.fake("database.type") as string;
+    return "Error" + t.charAt(0).toUpperCase() + t.slice(1);
+  });
+
+  expect(faker.fake("ErrorType")).toBeTruthy();
+  expect(faker.fake("ErrorType")).toMatch(/^Error[A-Z].+$/);
 });

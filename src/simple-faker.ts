@@ -129,25 +129,6 @@ export class SimpleFaker {
     return this.faker.random.alphaNumeric(this.fakeInteger(6, 20));
   }
 
-  fakeWords(min = 5, max = 20): string {
-    return this.faker.lorem.words(this.fakeInteger(min, max));
-  }
-
-  fakeSentences(min = 5, max = 20): string {
-    return this.faker.lorem.sentences(this.fakeInteger(min, max));
-  }
-
-  fakePhrase(): string {
-    if (this.locale === "ja") {
-      return this.faker.lorem.lines(1);
-    }
-    return this.faker.hacker.phrase();
-  }
-
-  fakeParagraphs(min = 3, max = 10, separator = " "): string {
-    return this.faker.lorem.paragraphs(this.fakeInteger(min, max), separator);
-  }
-
   fakeHtml(
     min = 3,
     max = 10,
@@ -167,8 +148,14 @@ export class SimpleFaker {
     if (typeof dataType !== "string")
       throw new TypeError("Invalid type: " + JSON.stringify(dataType));
 
-    /* type format: "internet.url", "address.cityName", or "name.jobTitle" */
-    let m = dataType.match(/^\s*([a-z0-9]+)\.([a-z0-9]+)\s*$/i);
+    let isRange = false;
+    let min = 0;
+    let max = 0;
+    let rand = 0;
+    /* type format: "internet.url", "address.cityName", or "lorem.words(2,3)" */
+    let m = dataType.match(
+      /^\s*([a-z0-9]+)\.([a-z0-9]+)\s*(\((-?[0-9]+),\s*(-?[0-9]+)\))?\s*$/i
+    );
     if (m && m[1] !== "mersenne") {
       // ignore mersenne
       if (!this.faker.hasOwnProperty(m[1]) || !this.faker[m[1]])
@@ -177,7 +164,13 @@ export class SimpleFaker {
       if (typeof this.faker[m[1]][m[2]] !== "function")
         throw new TypeError("Invalid type: " + dataType);
       try {
-        return this.faker[m[1]][m[2]]();
+        isRange = m[4] !== undefined && m[5] !== undefined;
+        min = isRange ? parseInt(m[4], 10) : 0;
+        max = isRange ? parseInt(m[5], 10) : 0;
+        rand = isRange ? this.fakeInteger(min, max) : 0;
+        return isRange
+          ? this.faker[m[1]][m[2]](rand)
+          : this.faker[m[1]][m[2]]();
       } catch (e) {
         throw new TypeError("Invalid type: " + dataType);
       }
@@ -193,16 +186,18 @@ export class SimpleFaker {
     }
 
     /* simple type format: "string(3,5)", "paragraphs(1,3)", "integer(5,70)", or "boolean" */
-    m = dataType.match(/^\s*([a-z0-9]+)\s*(\((-?\d+),\s*(-?\d+)\))?\s*$/i);
+    m = dataType.match(
+      /^\s*([a-z0-9]+)\s*(\((-?[0-9]+),\s*(-?[0-9]+)\))?\s*$/i
+    );
     if (!m) {
       throw new TypeError("Invalid type: " + dataType);
     }
 
     const t = m[1].toLowerCase();
-    const isRange = m[3] !== undefined && m[3] !== undefined;
-    const min = isRange ? parseInt(m[3], 10) : 0;
-    const max = isRange ? parseInt(m[4], 10) : 0;
-    const rand = isRange ? this.fakeInteger(min, max) : 0;
+    isRange = m[3] !== undefined && m[3] !== undefined;
+    min = isRange ? parseInt(m[3], 10) : 0;
+    max = isRange ? parseInt(m[4], 10) : 0;
+    rand = isRange ? this.fakeInteger(min, max) : 0;
 
     /* callback customized type */
     const cb = this.getCallbackType(t);
@@ -229,13 +224,28 @@ export class SimpleFaker {
 
   fakeSchema(schema: Schema): Schema {
     if (typeof schema !== "object")
-      throw new TypeError("Invalid type: " + JSON.stringify(schema));
+      throw new TypeError(
+        "Schema must be object (got: " + JSON.stringify(schema) + ")"
+      );
 
     const data: Schema = {};
+    const self = this;
 
     for (const [key, value] of Object.entries(schema)) {
       if (typeof value === "object") {
-        data[key] = this.fakeSchema(value as Schema);
+        if (Array.isArray(value)) {
+          data[key] = value.map((v) => {
+            if (typeof v === "object") {
+              return self.fakeSchema(v);
+            } else if (typeof v === "string") {
+              return self.fake(v as string);
+            } else {
+              throw new TypeError("Invalid type: " + JSON.stringify(v));
+            }
+          });
+        } else {
+          data[key] = this.fakeSchema(value as Schema);
+        }
       } else if (typeof value === "string") {
         data[key] = this.fake(value as string);
       } else {
@@ -248,7 +258,9 @@ export class SimpleFaker {
 
   fakeApi(schema: ApiSchema): ApiSchemaValue {
     if (typeof schema !== "object")
-      throw new TypeError("Schema must be object: " + JSON.stringify(schema));
+      throw new TypeError(
+        "Schema must be object (got: " + JSON.stringify(schema) + ")"
+      );
 
     const data: ApiSchemaValue = {};
     for (const [key, subSchema] of Object.entries(schema)) {

@@ -62,18 +62,6 @@ test("fakeString", () => {
   expect(typeof fakerJa.fakeUsername()).toBe("string");
   expect(typeof fakerJa.fake("username")).toBe("string");
 
-  expect(typeof fakerJa.fakeWords()).toBe("string");
-  expect(typeof fakerJa.fake("words")).toBe("string");
-
-  expect(typeof fakerJa.fakeSentences()).toBe("string");
-  expect(typeof fakerJa.fake("sentences")).toBe("string");
-
-  expect(typeof fakerJa.fakePhrase()).toBe("string");
-  expect(typeof fakerJa.fake("phrase")).toBe("string");
-
-  expect(typeof fakerJa.fakeParagraphs()).toBe("string");
-  expect(typeof fakerJa.fake("paragraphs")).toBe("string");
-
   expect(typeof fakerJa.fakeHtml()).toBe("string");
   expect(typeof fakerJa.fake("html")).toBe("string");
 });
@@ -108,10 +96,6 @@ test("simple fake", () => {
     "datetime",
     "date",
     "time",
-    "phrase",
-    "words",
-    "sentences",
-    "paragraphs",
     "html",
   ];
   types.forEach((t) => {
@@ -125,6 +109,11 @@ test("fakerjs", () => {
   expect(typeof faker.fake("address.zipCode")).toBe("string");
   expect(typeof faker.fake("animal.dog")).toBe("string");
   expect(typeof faker.fake("commerce.productMaterial")).toBe("string");
+  expect(typeof fakerJa.fake("lorem.words")).toBe("string");
+  expect(typeof fakerJa.fake("hacker.phrase")).toBe("string");
+  expect(typeof fakerJa.fake("lorem.sentences")).toBe("string");
+  expect(typeof fakerJa.fake("lorem.sentences(1,2)")).toBe("string");
+  expect(typeof fakerJa.fake("lorem.paragraphs(2,4)")).toBe("string");
 
   expect(
     faker.fake(

@@ -1,4 +1,6 @@
 import { SimpleFaker, Schema, ApiSchema } from "../src";
+import * as fs from "fs";
+import * as path from "path";
 
 const userSchema: Schema = {
   id: "integer",
@@ -16,6 +18,7 @@ const userSchema: Schema = {
 const hobbiesSchema: Schema = {
   cat: "image.cats",
   homepage: "url",
+  tags: ["word", "words(1,2)"],
   hobbies:
     "Vehicle: {{vehicle.vehicle}}, animal: {{animal.dog}}, and {{music.genre}}",
 };
@@ -51,6 +54,10 @@ test("fakeSchema simple", () => {
   const hobbies = faker.fakeSchema(hobbiesSchema);
   for (const [prop, value] of Object.entries(hobbiesSchema)) {
     expect(hobbies).toHaveProperty(prop);
+    if (prop === "tags") {
+      expect(Array.isArray(value)).toBe(true);
+      expect((value as string[]).length).toBe(2);
+    }
   }
 });
 
@@ -112,6 +119,8 @@ test("fakeApi", () => {
 
 test("fakeApi more", () => {
   const dataLength = 3;
+  const schemaFile = path.resolve(__dirname, "schema.json");
+  const mySchema = JSON.parse(fs.readFileSync(schemaFile).toString());
 
   const apiSchemas: ApiSchema[] = [
     {
@@ -125,6 +134,7 @@ test("fakeApi more", () => {
       Secret: nestedSchema,
       SuperNest: superNestedSchema,
     },
+    mySchema,
   ];
 
   for (let i = 1; i < 11; i++) {
