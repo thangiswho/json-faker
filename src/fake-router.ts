@@ -54,8 +54,10 @@ export const fakeRouter = (
   router.get("/", (req, res) => {
     let body =
       "<h2>A simple faker server!</h2>" +
-      "<br/><br/>" +
-      "<p>Routes: <br/><ul>" +
+      "<p><b>Schemas</b>: " +
+      Object.keys(apiShema).join(", ") +
+      "</p>" +
+      "<p><b>Routes</b>: <br/><ul>" +
       "<li>GET/POST/PUT/DELETE /code/:code (status code is between 200 and 500)</li>" +
       "</ul></p>";
 
@@ -64,10 +66,10 @@ export const fakeRouter = (
       const id = faker.fake("integer");
 
       body +=
-        "<p><ul>" +
+        `<p><div>/${route}</div><ul>` +
         [
           `<li>GET /${route}</li>`,
-          `<li>GET /${route}/:id</li>`,
+          `<li>GET /${route}/${id}</li>`,
           `<li>POST /${route}</li>`,
           `<li>POST /${route}/${id}</li>`,
           `<li>PUT /${route}/${id}</li>`,
