@@ -151,11 +151,6 @@ const fakeServer = function (argv) {
         description: 'The locale (eg. "ja", "de")',
         default: "en",
       },
-      output: {
-        alias: "o",
-        description: "Write faked data to file",
-        default: "",
-      },
       port: {
         alias: "p",
         description: "Set port",

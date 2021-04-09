@@ -4,7 +4,8 @@
   "description": "simple-faker generates massive amount of json fake data with zero coding",
   "main": "./dist/index.js",
   "bin": {
-    "fake-data": "./bin/fake-data.js"
+    "fake-data": "./bin/fake-data.js",
+    "fake-server": "./bin/fake-server.js"
   },
   "types": "./dist/index.d.ts",
   "scripts": {
