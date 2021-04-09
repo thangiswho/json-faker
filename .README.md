@@ -1,6 +1,6 @@
 # simple-faker
-[simple-faker](https://github.com/thangiswho/simple-faker) generates massive amount of json fake data with **zero coding**. 
-Creating a fake REST API even simpler by combining **simple-faker** and [json-server](https://github.com/typicode/json-server). 
+[simple-faker](https://github.com/thangiswho/simple-faker) generates massive amount of json fake data with **zero coding**, based on data type and json schema.
+Creating a mockup REST API even simplier by combining **simple-faker** and [json-server](https://github.com/typicode/json-server). 
 [simple-faker](https://github.com/thangiswho/simple-faker) uses [faker.js](https://github.com/Marak/faker.js) to generate fake data.
 
 ## Getting started
@@ -9,9 +9,9 @@ Install simple-faker
 
 ```bash
 # Using yarn
-yarn add @thangiswho/simple-faker
+yarn add --dev @thangiswho/simple-faker
 # Using npm
-npm install @thangiswho/simple-faker
+npm install --save-dev @thangiswho/simple-faker
 ```
 
 **Typescript Usage**
@@ -24,11 +24,13 @@ const {SimpleFaker} = require("simple-faker");
 ```
 
 ```typescript
-const faker = new SimpleFaker("en", 10);
+const faker = new SimpleFaker(); // The default locale is en, data length is 10
+// const faker = new SimpleFaker("ja", 20);
 faker.fake("integer"); // return 75
 faker.fake("integer(10,99)"); // return 2 digits number
 faker.fake("html"); // return html string block
-faker.fakeSchema({
+
+const userSchema = {
   "id": "integer",
   "username": "username(6,20)",
   "email": "email",
@@ -39,29 +41,25 @@ faker.fakeSchema({
   "gender": "gender",
   "about": "Hello, my name is {{name.firstName}}. I was born in {{address.cityName}}.",
   "profile": "html(2,5)",
-}); // return object with the same schema
+};
+faker.fakeSchema(userSchema); // return object with the same schema
 
 faker.fakeApi({
-  "User": {
-    "id": "integer",
-    "username": "username(5,30)",
-    "email": "email",
-    "last_login": "datetime"
-  },
-  "Post": {
+  "Users": userSchema,
+  "Posts": {
     "id": "integer",
     "author": "username(5,30)",
     "content": "html(4,7)",
     "summary": "lorem.paragraphs(2,3)",
     "created_at": "datetime",
     "published": "boolean"
-  },
+  }
 });
 /**
  * return json-server compatible mockup json
- * Data length of each data set is defined when initialize new SimpleFaker(locale, dataLength)
+ * Data length of each data set is defined when initialized with new SimpleFaker(locale, dataLength)
  * {
- *   "User": [
+ *   "Users": [
  *     {
  *       "id": ...
  *       "username": ...
@@ -73,7 +71,7 @@ faker.fakeApi({
  *       ...
  *     }
  *   ],
- *   "Post": [
+ *   "Posts": [
  *     {
  *       "id": ...
  *       "author": ...
@@ -89,13 +87,17 @@ faker.fakeApi({
 
 ```
 
-With the cli fake-data, you can **simply create** a fake REST API with [json-server](https://github.com/typicode/json-server).
-*schema.json* file content is exactly as same as the schema passed to faker.fakeApi(schema)
+With the cli **fake-data**, you can *simply create* a mock REST API with [json-server](https://github.com/typicode/json-server).
+Firstly, create a *schema.json* file with content is as same as the schema passed to faker.fakeApi(schema).
+Please refer to the sample schema: [schema.json](https://raw.githubusercontent.com/thangiswho/simple-faker/main/__tests__/schema.json).
 
 ```bash
+yarn add --dev json-server
 yarn fake-data -o mockupdb.json schema.json
 json-server --watch mockupdb.json
 ```
+
+Now if you go to http://localhost:3000/users/{id} or http://localhost:3000/users, you'll get your fake users.
 
 ## Usage
 
@@ -136,7 +138,9 @@ faker.fake(`typename(${min},${max})`)
 faker.fake(`group.typename(${min},${max})`)
 ```
 
-Basically, simple-faker try to find all grand-children properties of faker.js, it will call faker.js if there is any grand-child properties found
+Basically, [simple-faker](https://github.com/thangiswho/simple-faker) will try to find all grand-children properties of faker.js, it will call faker.js if there is any grand-child properties found.
+[simple-faker](https://github.com/thangiswho/simple-faker) also supports faker.js' mustache format.
+
 ```javascript
 faker.fake("address.city"); // same as faker.js's faker.address.city()
 // simple-faker is smart to find city is property of address
@@ -145,40 +149,40 @@ faker.fake("city"); // same as faker.js's faker.address.city()
 faker.fake("lorem.words(2,5)"); // same as faker.js's faker.lorem.words(n) with 2 <= n <= 5
 // simple-faker is smart to find words is property of lorem
 faker.fake("words"); // same as faker.js's faker.lorem.words()
+faker.fake("{{name.lastName}} {{name.firstName}} lives in {{address.country}}");
 ```
 
-### mustache Format Types
-[simple-faker](https://github.com/thangiswho/simple-faker) also supports faker.js' mustache format.
-Further more, you can fake schema nested with other schema
+### Fake Mock API
+By using fakeSchema and fakeApi, you can simple generates massive amount of json data for mockup REST API.
+Further more, you can fake schema nested by other schema.
 
 ```javascript
-faker.fakeSchema({
+const otherSchema = {id: "integer(1000,9000)", message: "phrase"};
+const accountSchema = {
   message: "{{name.lastName}} {{name.firstName}} lives in {{address.country}}",
   money: "{{finance.amount}} millions USD",
   crypto: "finance.bitcoinAddress",
   nested: {
-    prop1: "lorem.phrase",
+    prop1: "phrase", // simple-faker knows that phase belongs to hacker.phrase
     tags: ["word", "words(2,2)"],
     comments: [
       {commentId: "integer(1000,9999)", comment: "html(1,3)"},
       {commentId: "integer(100000,999999)", comment: "html(2,4)"}
-    ]
+    ],
+    other: otherSchema
   }
-});
-```
+};
 
-### Nested Schema
-[simple-faker](https://github.com/thangiswho/simple-faker) also supports schema nested by other schema.
-
-```javascript
+faker.fakeSchema(accountSchema);
 faker.fakeApi({
-  "User": userSchema,
-  "Post": {
+  "Users": userSchema,
+  "Posts": {
     "id": "integer",
-    "ref": postSchema,
+    "ref": otherSchema,
     "tags": ["word", "words(2,2)"],
-    "comments": [commentSchema, commentSchema, commentSchema]
-  }
+    "comments": [otherSchema, otherSchema, otherSchema]
+  },
+  "Accounts": accountSchema
 });
 ```
 
@@ -194,6 +198,10 @@ const categories = [
 faker.addType("MyTax", () => {
   return faker.fakeInteger(1000,5000) * 21 / 100;
 });
+faker.addType("MyAccountSummary", (i,j) => {
+  const rand = i + j;
+  return "Debit: " + faker.fake("finance.amount") + " / Credit: " + rand.toString();
+});
 faker.addType("MyCategory", () => {
   return categories[faker.fakeInteger(0, categories.length - 1)];
 });
@@ -201,13 +209,15 @@ faker.fake("MyCategory");
 faker.fakeApi({
   "News": {
     "id": "integer",
-    "title": "lorem.phrase",
+    "title": "hacker.phrase",
     "content": "html(5,8)",
     "category": "mycategory", // great, I can add my own customized type
   },
-  "Salary": {
+  "Salaries": {
     "net": "integer(100000,120000)",
-    "tax": "mytax"  // great, I can add my own customized type
+    "category": "mycategory", // great, I can add my own customized type
+    "summary": "MyAccountSummary(500, 1000)", // type name is case-insensitive
+    "tax": "mytax"  // wow, I can use as many customized types as I can
   }
 });
 ```
@@ -230,10 +240,12 @@ yarn fake-data schema.json
 yarn fake-data -o mockupdb.json schema.json
 ```
 
-Then, run a mockup jsons-server
+Then, run a mockup [jsons-server](https://github.com/typicode/json-server)
 ```bash
 json-server mockupdb.json
 ```
+
+Now if you go to http://localhost:3000/users/{id} or http://localhost:3000/users, you'll get your fake users.
 
 ### SimpleFaker class
 - fake: *faker.fake(dataType)* to fake a single data type
