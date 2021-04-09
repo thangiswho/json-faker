@@ -1,9 +1,11 @@
 {
   "name": "@thangiswho/simple-faker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "simple-faker generates massive amount of json fake data with zero coding",
   "main": "./dist/index.js",
-  "bin": {"fake-data": "./bin/fake-data.js"},
+  "bin": {
+    "fake-data": "./bin/fake-data.js"
+  },
   "types": "./dist/index.d.ts",
   "scripts": {
     "watch": "tsc --watch",
