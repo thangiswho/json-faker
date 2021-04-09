@@ -95,7 +95,7 @@ const fakeServer = function (argv) {
       errors: {
         type: faker.fake("database.type"),
         credentials: faker.fake("Invalid credentials: {{internet.password}}"),
-      }
+      },
     });
   });
 
