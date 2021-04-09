@@ -40,7 +40,9 @@ test("fakeFloat", () => {
   expect(faker.fakeFloat(10.5)).toBeGreaterThanOrEqual(10.5);
   expect(faker.fakeFloat(1560.51, 1560.52)).toBeLessThanOrEqual(1560.52);
   expect(faker.fake("float(10, 99)").toString().length).toBeLessThanOrEqual(5);
-  expect(faker.fake("float(1000000, 9999999)").toString().length).toBe(10);
+  expect(
+    faker.fake("float(1000000, 9999999)").toString().length
+  ).toBeLessThanOrEqual(10);
   expect(faker.fakeFloat(1000.51, 1000.511)).toBeLessThanOrEqual(1000.52);
 });
 
