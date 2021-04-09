@@ -25,4 +25,4 @@ for (const [prop, obj] of Object.entries(faker.faker)) {
 readme = readme.replace("{{FakerJS.Types}}", apis);
 
 fs.writeFileSync(path.resolve(__dirname, "..", README_FILE), readme);
-console.log("Generte-api done!");
+console.log("Update readme done!");

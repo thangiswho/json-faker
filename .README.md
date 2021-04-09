@@ -14,16 +14,16 @@ yarn add --dev @thangiswho/simple-faker
 npm install --save-dev @thangiswho/simple-faker
 ```
 
-**Typescript Usage**
+**Typescript usage**
 ```typescript
 import {SimpleFaker} from "simple-faker";
 ```
-**Javacript Usage**
+**Javacript usage**
 ```javascript
 const {SimpleFaker} = require("simple-faker");
 ```
 
-```typescript
+```javascript
 const faker = new SimpleFaker(); // The default locale is en, data length is 10
 // const faker = new SimpleFaker("ja", 20);
 faker.fake("integer"); // return 75
@@ -87,19 +87,57 @@ faker.fakeApi({
 
 ```
 
-With the cli **fake-data**, you can *simply create* a mock REST API with [json-server](https://github.com/typicode/json-server).
+### CLI fake-server usage
+
+With the cli **fake-server**, you can *simply create* a mock REST API with **zero coding**.
 Firstly, create a *schema.json* file with content is as same as the schema passed to faker.fakeApi(schema).
 Please refer to the sample schema: [schema.json](https://raw.githubusercontent.com/thangiswho/simple-faker/main/__tests__/schema.json).
 
 ```bash
-yarn add --dev json-server
+yarn add --dev express
+yarn fake-server --help
+# using npm
+npx fake-server --help
+fake-server [options] <schema json file>
+
+Options:
+      --help     Show help                                             [boolean]
+      --version  Show version number                                   [boolean]
+  -n, --length   The length of each generated data set             [default: 10]
+  -l, --locale   The locale (eg. "ja", "de")                     [default: "en"]
+  -p, --port     Set port                                        [default: 3000]
+  -h, --host     Set host                                 [default: "localhost"]
+
+yarn fake-server schema.json
+```
+Now if you go to http://localhost:3000/users or http://localhost:3000/users/10346, you'll get your fake users.
+
+![simple fake server](/docs/fake-server-1.png "simple fake server")
+![simple fake server](/docs/fake-server-2.png "simple fake server")
+
+### CLI fake-data usage
+
+If you just want to generate fake data to use it by your own way, please use the cli **fake-data**.
+For example, you can use [json-server](https://github.com/typicode/json-server) to serve your fake data.
+
+```bash
+yarn fake-data --help
+fake-data [options] <schema json file>
+
+Options:
+      --help     Show help                                             [boolean]
+      --version  Show version number                                   [boolean]
+  -n, --length   The length of each generated data set             [default: 10]
+  -l, --locale   The locale (eg. "ja", "de")                     [default: "en"]
+  -o, --output   Write faked data to file                          [default: ""]
+
 yarn fake-data -o mockupdb.json schema.json
-json-server --watch mockupdb.json
+# for example, use json-server to serve mockupdb.json
+yarn add --dev json-server
+json-server mockupdb.json
 ```
 
-Now if you go to http://localhost:3000/users/{id} or http://localhost:3000/users, you'll get your fake users.
-
-## Usage
+## Data Types
 
 ### Basic Types
 
@@ -152,8 +190,9 @@ faker.fake("words"); // same as faker.js's faker.lorem.words()
 faker.fake("{{name.lastName}} {{name.firstName}} lives in {{address.country}}");
 ```
 
-### Fake Mock API
-By using fakeSchema and fakeApi, you can simple generates massive amount of json data for mockup REST API.
+### Schema and API
+
+By using fakeSchema and fakeApi, you can simply generate massive amount of json data for mockup REST API.
 Further more, you can fake schema nested by other schema.
 
 ```javascript
@@ -221,38 +260,51 @@ faker.fakeApi({
   }
 });
 ```
+
 ## API Methods
 
-### .bin/fake-data command
-```bash
-# npx fake-data schema.json
-yarn fake-data --help
-fake-data [options] <schema json file>
+### Your own mockup server using express
 
-Options:
-      --help     Show help                                             [boolean]
-      --version  Show version number                                   [boolean]
-  -n, --length   The length of each generated data set             [default: 10]
-  -l, --locale   The locale (eg. "ja", "de")                     [default: "en"]
-  -o, --output   Write faked data to file                          [default: ""]
+You can create your own mockup server as the following sample code.
 
-yarn fake-data schema.json
-yarn fake-data -o mockupdb.json schema.json
+```javascript
+const { SimpleFaker } = require("simple-faker");
+const express = require("express");
+const userSchema = {id: "integer", username: "username", email: "email"};
+// or const userSchema = readSchemaFile(argv.schema);
+
+const runServer = function(argv) {
+  const faker = new SimpleFaker(argv.locale, argv.length);
+  const app = express();
+
+  app.get(`/users`, (req, res) => {
+      const data = faker.fakeApi({ prop: userSchema });
+      res.send(data.prop);
+  });
+  app.get(`/users/:id`, (req, res) => {
+    const data = faker.fakeSchema(userSchema);
+    data.id = req.params.id;
+    res.send(data);
+  });
+  app.post(`/users`, (req, res) => {
+    const data = faker.fakeSchema(userSchema);
+    res.send(data);
+  });
+
+  app.listen(argv.port, argv.host, () => {console.log("fake-server is running")});
+};
+
 ```
 
-Then, run a mockup [jsons-server](https://github.com/typicode/json-server)
-```bash
-json-server mockupdb.json
-```
 
-Now if you go to http://localhost:3000/users/{id} or http://localhost:3000/users, you'll get your fake users.
+### Fake Methods
 
-### SimpleFaker class
 - fake: *faker.fake(dataType)* to fake a single data type
 - fakeSchema: *faker.fakeSchema(objectType)* to fake a whole object
 - fakeApi: *faker.fakeApi(apiSchema)* to run mockup json-server
 
-### SimpleFaker.fake(dataType) Types list
+### Data Types List
+
 You can define your schema type with any type from the following types.
 ```javascript
 // schema.json
