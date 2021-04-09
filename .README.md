@@ -3,6 +3,11 @@
 You can easily create a mockup REST API server with simple-faker's built-in CLI **fake-server**.
 simple-faker uses [faker.js](https://github.com/Marak/faker.js) to generate fake data.
 
+```bash
+$ yarn fake-server -b /api/v1 schema.json
+The simple faker server is running at http://localhost:3000/api/v1
+```
+
 ## Getting started
 
 Install simple-faker
@@ -90,15 +95,16 @@ faker.fakeApi({
 ### CLI fake-server usage
 
 With the cli **fake-server**, you can *simply create* a mock REST API with **zero coding**.
-Firstly, create a *schema.json* file with content is as same as the schema passed to faker.fakeApi(schema).
+Firstly, create a *schema.json* file with content is as same as the schema passed to `faker.fakeApi(schema).`
 Please refer to the sample schema: [schema.json](https://raw.githubusercontent.com/thangiswho/simple-faker/main/__tests__/schema.json).
 
 ```bash
 # fake-server requires express
 yarn add --dev express
-yarn fake-server --help
+
 # using npm
-npx fake-server --help
+# npx fake-server --help
+yarn fake-server --help
 fake-server [options] <schema json file>
 
 Options:
@@ -108,10 +114,13 @@ Options:
   -l, --locale   The locale (eg. "ja", "de")                     [default: "en"]
   -p, --port     Set port                                        [default: 3000]
   -h, --host     Set host                                 [default: "localhost"]
+  -b, --base     Set base url (e.g. /v2 or /api)                   [default: ""]
 
-yarn fake-server schema.json
+yarn fake-server -b /api/v1 schema.json
+// The simple faker server is running at http://localhost:3000/api/v1
 ```
-Now if you go to http://localhost:3000/users or http://localhost:3000/users/10346, you'll get your fake users.
+
+Now if you go to http://localhost:3000/api/v1/users or http://localhost:3000/api/v1/users/10346, you'll get your fake users.
 
 ![simple fake server](/docs/fake-server-1.png "simple fake server")
 ![simple fake server](/docs/fake-server-2.png "simple fake server")
