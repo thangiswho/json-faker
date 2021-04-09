@@ -41,6 +41,7 @@
   },
   "homepage": "https://github.com/thangiswho/simple-faker#readme",
   "devDependencies": {
+    "@types/express": "^4.17.11",
     "@types/faker": "^5.5.0",
     "@types/jest": "^26.0.22",
     "express": "^4.17.1",

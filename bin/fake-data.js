@@ -6,19 +6,23 @@ const yargs = require("yargs");
 
 const fakeData = function (argv) {
   const schemaFile = argv._[0];
+  let schema;
+
   if (!fs.existsSync(schemaFile)) {
-    console.error("Error: schema file [" + schemaFile + "] does not exist!");
+    console.error(`Error: schema file [${schemaFile}] does not exist!`);
     return;
   }
   try {
     schema = JSON.parse(fs.readFileSync(schemaFile));
-    if (!schema || typeof schema !== "object") {
-      console.error(
-        "Error: schema file [" + schemaFile + "] is not a valid json file"
-      );
-      return;
-    }
+  } catch (e) {
+    console.error(
+      `Error: schema file [${schemaFile}] is not a valid json file`
+    );
+    console.error(e.message);
+    return;
+  }
 
+  try {
     const faker = new SimpleFaker(argv.locale, argv.length);
     const api = JSON.stringify(faker.fakeApi(schema), null, 2);
 
@@ -29,7 +33,7 @@ const fakeData = function (argv) {
       console.log(api);
     }
   } catch (e) {
-    console.error("Error: Could not fake data for schema [" + schemaFile + "]");
+    console.error(`Error: Could not fake data for schema [${schemaFile}]`);
     console.error(e.message);
     return;
   }
