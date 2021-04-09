@@ -1,5 +1,5 @@
 {
-  "User": {
+  "Users": {
     "id": "integer",
     "username": "username(6,20)",
     "email": "email",
@@ -21,14 +21,14 @@
     "content": "html(3,10)",
     "category": "words(1,2)"
   },
-  "Comment": {
+  "Comments": {
     "comment": "{{lorem.sentence}}<br/><p>{{lorem.paragraphs}}</p>",
     "liked": "integer(0,500)",
     "created_at": "datetime",
     "userID": "integer(1000000,9999999)",
     "username": "name"
   },
-  "Post": {
+  "Posts": {
     "title": "phrase",
     "author": "name",
     "authorID": "username",
@@ -43,7 +43,7 @@
       "avatar": "avatar"
     }
   },
-  "Error": {
+  "Errors": {
     "code": "integer(200,500)",
     "message": "phrase",
     "type": "database.type"

@@ -15,7 +15,8 @@ const userSchema: Schema = {
   about: "html(1,3)",
 };
 
-const hobbiesSchema: Schema = {
+const hobbySchema: Schema = {
+  id: "integer",
   cat: "image.cats",
   homepage: "url",
   tags: ["word", "words(1,2)"],
@@ -23,13 +24,14 @@ const hobbiesSchema: Schema = {
     "Vehicle: {{vehicle.vehicle}}, animal: {{animal.dog}}, and {{music.genre}}",
 };
 const nestedSchema: Schema = {
+  id: "integer",
   code: "database.type",
   money: "{{finance.amount}} millions USD",
   crypto: "finance.bitcoinAddress",
   slogan: "phrase",
   debit: "integer(10000, 50000)",
   hacker: "hacker.noun",
-  hobbies: hobbiesSchema,
+  hobby: hobbySchema,
 };
 const superNestedSchema: Schema = {
   id: "integer",
@@ -51,9 +53,9 @@ test("fakeSchema simple", () => {
     expect(user).toHaveProperty(prop);
   }
 
-  const hobbies = faker.fakeSchema(hobbiesSchema);
-  for (const [prop, value] of Object.entries(hobbiesSchema)) {
-    expect(hobbies).toHaveProperty(prop);
+  const hobby = faker.fakeSchema(hobbySchema);
+  for (const [prop, value] of Object.entries(hobbySchema)) {
+    expect(hobby).toHaveProperty(prop);
     if (prop === "tags") {
       expect(Array.isArray(value)).toBe(true);
       expect((value as string[]).length).toBe(2);
@@ -67,11 +69,11 @@ test("fakeSchema nested", () => {
 
   const superNested: Schema = faker.fakeSchema(superNestedSchema);
   const nested: Schema = superNested["nested"] as Schema;
-  const hobbies: Schema = nested["hobbies"] as Schema;
+  const hobby: Schema = nested["hobby"] as Schema;
 
   expect(superNested).toBeTruthy();
   expect(nested).toBeTruthy();
-  expect(hobbies).toBeTruthy();
+  expect(hobby).toBeTruthy();
 
   for (const [prop, value] of Object.entries(superNestedSchema)) {
     expect(superNested).toHaveProperty(prop);
@@ -81,8 +83,8 @@ test("fakeSchema nested", () => {
     expect(nested).toHaveProperty(prop);
   }
 
-  for (const [prop, value] of Object.entries(hobbiesSchema)) {
-    expect(hobbies).toHaveProperty(prop);
+  for (const [prop, value] of Object.entries(hobbySchema)) {
+    expect(hobby).toHaveProperty(prop);
   }
 });
 
@@ -90,17 +92,17 @@ test("fakeApi", () => {
   const dataLength = 15;
   const faker = new SimpleFaker("ja", 15);
   const apiSchema: ApiSchema = {
-    User: userSchema,
-    Hobby: hobbiesSchema,
+    Users: userSchema,
+    Hobbies: hobbySchema,
   };
 
   const api = faker.fakeApi(apiSchema);
   expect(Object.keys(api).length).toBe(2);
-  expect(api).toHaveProperty("User");
-  expect(api).toHaveProperty("Hobby");
+  expect(api).toHaveProperty("Users");
+  expect(api).toHaveProperty("Hobbies");
 
-  const users: Schema[] = api["User"] as Schema[];
-  const hobbies: Schema[] = api["Hobby"] as Schema[];
+  const users: Schema[] = api["Users"] as Schema[];
+  const hobbies: Schema[] = api["Hobbies"] as Schema[];
 
   expect(users.length).toBe(dataLength);
   expect(hobbies.length).toBe(dataLength);
@@ -111,7 +113,7 @@ test("fakeApi", () => {
     }
   });
   hobbies.forEach((hobby) => {
-    for (const [prop, value] of Object.entries(hobbiesSchema)) {
+    for (const [prop, value] of Object.entries(hobbySchema)) {
       expect(hobby).toHaveProperty(prop);
     }
   });
@@ -124,14 +126,14 @@ test("fakeApi more", () => {
 
   const apiSchemas: ApiSchema[] = [
     {
-      User: userSchema,
-      Hobby: hobbiesSchema,
-      Secret: nestedSchema,
+      Users: userSchema,
+      Hobbies: hobbySchema,
+      Secrets: nestedSchema,
     },
     {
-      User: userSchema,
-      Hobby: hobbiesSchema,
-      Secret: nestedSchema,
+      Users: userSchema,
+      Hobbies: hobbySchema,
+      Secrets: nestedSchema,
       SuperNest: superNestedSchema,
     },
     mySchema,
