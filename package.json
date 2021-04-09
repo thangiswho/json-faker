@@ -1,7 +1,7 @@
 {
   "name": "@thangiswho/simple-faker",
   "version": "1.0.3",
-  "description": "simple-faker generates massive amount of json fake data with zero coding",
+  "description": "simple-faker generates massive amount of json fake data with zero coding. It is also built with a simple faker server to serve REST API.",
   "main": "./dist/index.js",
   "bin": {
     "fake-data": "./bin/fake-data.js",
@@ -32,7 +32,11 @@
   "keywords": [
     "json",
     "faker",
-    "api"
+    "api",
+    "mock",
+    "json",
+    "express",
+    "generator"
   ],
   "author": "thangiswho <thangiswho@gmail.com>",
   "license": "MIT",

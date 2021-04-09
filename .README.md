@@ -1,12 +1,14 @@
 # simple-faker
 [simple-faker](https://github.com/thangiswho/simple-faker) generates massive amount of json fake data with **zero coding**, based on data type and json schema.
-You can easily create a mockup REST API server with simple-faker's built-in CLI **fake-server**.
-simple-faker uses [faker.js](https://github.com/Marak/faker.js) to generate fake data.
+It is also built with a simple faker server to serve mockup REST API.
+`simple-faker` uses [faker.js](https://github.com/Marak/faker.js) to generate fake data.
 
 ```bash
 $ yarn fake-server -b /api/v1 schema.json
 The simple faker server is running at http://localhost:3000/api/v1
 ```
+
+![simple fake server](/docs/fake-server-1.jpg "simple fake server")
 
 ## Getting started
 
@@ -122,8 +124,9 @@ yarn fake-server -b /api/v1 schema.json
 
 Now if you go to http://localhost:3000/api/v1/users or http://localhost:3000/api/v1/users/10346, you'll get your fake users.
 
-![simple fake server](/docs/fake-server-1.png "simple fake server")
-![simple fake server](/docs/fake-server-2.png "simple fake server")
+![simple fake server](/docs/fake-server-1.jpg "simple fake server")
+![simple fake server](/docs/fake-server-2.jpg "simple fake server")
+![simple fake server](/docs/fake-server-3.jpg "simple fake server")
 
 ### CLI fake-data usage
 
