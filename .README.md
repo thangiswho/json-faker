@@ -1,7 +1,7 @@
 # simple-faker
 [simple-faker](https://github.com/thangiswho/simple-faker) generates massive amount of json fake data with **zero coding**, based on data type and json schema.
-Creating a mockup REST API even simplier by combining **simple-faker** and [json-server](https://github.com/typicode/json-server). 
-[simple-faker](https://github.com/thangiswho/simple-faker) uses [faker.js](https://github.com/Marak/faker.js) to generate fake data.
+You can easily create a mockup REST API server with simple-faker's built-in CLI **fake-server**.
+simple-faker uses [faker.js](https://github.com/Marak/faker.js) to generate fake data.
 
 ## Getting started
 
@@ -94,6 +94,7 @@ Firstly, create a *schema.json* file with content is as same as the schema passe
 Please refer to the sample schema: [schema.json](https://raw.githubusercontent.com/thangiswho/simple-faker/main/__tests__/schema.json).
 
 ```bash
+# fake-server requires express
 yarn add --dev express
 yarn fake-server --help
 # using npm
