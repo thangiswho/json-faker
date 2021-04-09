@@ -55,7 +55,13 @@ const fakeServer = function (argv) {
   app.use(cors);
 
   app.get("/", (req, res) => {
-    let body = "<h2>A simple faker server!</h2>" + "<br/><br/>Routes: <br/>\n";
+    let body =
+      "<h2>A simple faker server!</h2>" +
+      "<br/><br/>Routes: <br/>" +
+      "<p><ul>" +
+      '<li>GET/POST/PUT/DELETE <a href="/code/500">/code/:code</a> (status code is between 200 and 500)</li>' +
+      "</ul></p>";
+
     Object.keys(apiShema).forEach(function (k) {
       const route = k.toLowerCase();
       const id = faker.fake("integer");
@@ -69,6 +75,7 @@ const fakeServer = function (argv) {
           `<li>POST /${route}/${id}</li>`,
           `<li>PUT /${route}/${id}</li>`,
           `<li>DELETE /${route}/${id}</li>`,
+          `<li>ALL <a href="/${route}/code/500">/${route}/code/:code</a> (status code is between 200 and 500)</li>`,
         ].join("") +
         "</ul></p>";
     });
@@ -84,8 +91,11 @@ const fakeServer = function (argv) {
 
     res.status(code).send({
       code: code,
-      body: req.body,
-      query: req.query,
+      message: faker.fake("lorem.sentence"),
+      errors: {
+        type: faker.fake("database.type"),
+        credentials: faker.fake("Invalid credentials: {{internet.password}}"),
+      }
     });
   });
 
