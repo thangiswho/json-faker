@@ -1,6 +1,6 @@
 {
   "name": "@thangiswho/simple-faker",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "simple-faker generates massive amount of json fake data with zero coding",
   "main": "./dist/index.js",
   "bin": {
