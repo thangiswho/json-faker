@@ -1,6 +1,6 @@
 {
   "name": "schema-faker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "schema-faker generates massive amount of json fake data with zero coding. It is also built with a simple faker server to serve mockup REST API.",
   "main": "./dist/index.js",
   "bin": {
