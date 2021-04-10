@@ -3,6 +3,22 @@
 It is also built with a simple faker server to serve mockup REST API.
 `schema-faker` uses [faker.js](https://github.com/Marak/faker.js) to generate fake data.
 
+```javascript
+const faker = new SchemaFaker(); // The default locale is en, data length is 10
+faker.fake("integer"); // return a number
+faker.fake("html"); // return html paragraphs
+faker.fakeSchema({
+  id: "integer",
+  username: "username(6,20)",
+  email: "email",
+  profile: {
+    first_name: "name.firstName",
+    last_name: "name.lastName",
+    about: "Hello! I'm living in {{address.cityName}} with 2 kids and 1 {{animal.dog}}.",
+  },
+}); // return fake object with the defined schema
+```
+
 ```bash
 $ yarn fake-server -b /api/v1 schema.json
 The simple faker server is running at http://localhost:3000/api/v1
@@ -10,6 +26,26 @@ The simple faker server is running at http://localhost:3000/api/v1
 
 ![simple fake server](/docs/fake-server-1.jpg "simple fake server")
 
+To create a **custom mockup API server**
+
+```javascript
+const path = require("path");
+const express = require("express");
+const { SchemaFaker, fakeRouter } = require("schema-faker");
+const mockup = fakeRouter(path.resolve(__dirname, "schema.json"), {
+  locale: "de",
+});
+
+const server = express();
+server.use("/mockup/api", mockup); // simply use schema-faker's mockup router
+server.get("/:locale/other-fake-api", (req, res) => {
+  const len = req.query.length || 10;
+  const faker = new SchemaFaker(req.params.locale, len);
+  const data = faker.fakeApi({ prop: otherSchema });
+  res.json(data.prop);
+});
+// ...
+```
 ## Getting started
 
 Install schema-faker
@@ -33,34 +69,40 @@ const { SchemaFaker } = require("schema-faker");
 ```javascript
 const faker = new SchemaFaker(); // The default locale is en, data length is 10
 // const faker = new SchemaFaker("ja", 20);
-faker.fake("integer"); // return 75
+faker.fake("integer"); // return a number
 faker.fake("integer(10,99)"); // return 2 digits number
-faker.fake("html"); // return html string block
+faker.fake("html"); // return html paragraphs
+faker.fake("html(3,6"); // return html with paragraphs number is from 3 to 6
 
 const userSchema = {
-  "id": "integer",
-  "username": "username(6,20)",
-  "email": "email",
-  "first_name": "name.firstName",
-  "last_name": "name.lastName",
-  "password": "password",
-  "last_login": "datetime",
-  "gender": "gender",
-  "about": "Hello, my name is {{name.firstName}}. I was born in {{address.cityName}}.",
-  "profile": "html(2,5)",
+  id: "integer",
+  username: "username(6,20)",
+  email: "email",
+  first_name: "name.firstName",
+  last_name: "name.lastName",
+  password: "password",
+  last_login: "datetime",
+  gender: "gender",
+  profile: {
+    first_name: "name.firstName",
+    last_name: "name.lastName",
+    about: "Hello! I'm living in {{address.cityName}} with 2 kids and 1 {{animal.dog}}.",
+    bio: "html(2,5)",
+  },
 };
-faker.fakeSchema(userSchema); // return object with the same schema
+faker.fakeSchema(userSchema); // return fake object with the defined schema
 
 faker.fakeApi({
-  "Users": userSchema,
-  "Posts": {
-    "id": "integer",
-    "author": "username(5,30)",
-    "content": "html(4,7)",
-    "summary": "lorem.paragraphs(2,3)",
-    "created_at": "datetime",
-    "published": "boolean"
-  }
+  Users: userSchema,
+  Posts: {
+    id: "integer(100000,999999)",
+    author: "username(5,30)",
+    content: "html(4,7)",
+    summary: "lorem.paragraphs(2,3)",
+    created_at: "datetime",
+    published: "boolean",
+    tags: ["words(1,2)", "animal.type"],
+  },
 });
 /**
  * return json-server compatible mockup json
@@ -238,8 +280,8 @@ faker.fakeApi({
 });
 ```
 
-### Customized Types
-You can easily add your own type, and then define it in your schema. All type name is case-insensitive.
+### Custom Types
+You can easily add your own custom type, and then define it in your schema. All type names are case-insensitive.
 
 ```javascript
 const categories = [
@@ -274,41 +316,56 @@ faker.fakeApi({
 });
 ```
 
-## API Methods
+## Your Custom Mockup API Server
 
-### Your own mockup server using express
-
-You can create your own mockup server as the following sample code.
+### Your Custom Next.js Server
+Developing a frontend app requires an API server, yet dealing browser CORS issue is troublesome.
+You can create your own custom [Next.js](https://nextjs.org/) server built with [schema-faker](https://github.com/thangiswho/schema-faker) to serve both frontend and (mockup) backend.
 
 ```javascript
-const { SchemaFaker } = require("schema-faker");
+const path = require("path");
+const next = require("next");
 const express = require("express");
-const userSchema = {id: "integer", username: "username", email: "email"};
-// or const userSchema = readSchemaFile(argv.schema);
+const { SchemaFaker, fakeRouter } = require("schema-faker");
+const mockup = fakeRouter(path.resolve(__dirname, "schema.json"), {
+  locale: "de",
+});
 
-const runServer = function(argv) {
-  const faker = new SchemaFaker(argv.locale, argv.length);
-  const app = express();
+const port = process.env.PORT || 3000;
+const app = next({ dev: true });
+const handle = app.getRequestHandler();
 
-  app.get(`/users`, (req, res) => {
-      const data = faker.fakeApi({ prop: userSchema });
-      res.send(data.prop);
+app
+  .prepare()
+  .then(() => {
+    const server = express();
+    const otherSchema = { id: "integer", message: "lorem.sentence" };
+
+    server.use("/mockup/api", mockup); // simply use schema-faker's mockup router
+    server.get("/:locale/other-fake-api", (req, res) => {
+      const len = req.query.length || 10;
+      const faker = new SchemaFaker(req.params.locale, len);
+      const data = faker.fakeApi({ prop: otherSchema });
+      res.json(data.prop);
+    });
+
+    server.all("*", (req, res) => {
+      return handle(req, res);
+    });
+
+    server.listen(port, (err) => {
+      if (err) throw err;
+      console.log(
+        `> Fake Server for Next.js is ready on http://localhost:${port}`
+      );
+    });
+  })
+  .catch((err) => {
+    console.log("Error:::::", err);
   });
-  app.get(`/users/:id`, (req, res) => {
-    const data = faker.fakeSchema(userSchema);
-    data.id = req.params.id;
-    res.send(data);
-  });
-  app.post(`/users`, (req, res) => {
-    const data = faker.fakeSchema(userSchema);
-    res.send(data);
-  });
-
-  app.listen(argv.port, argv.host, () => {console.log("fake-server is running")});
-};
-
 ```
 
+## API Methods
 
 ### Fake Methods
 
