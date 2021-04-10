@@ -1,8 +1,8 @@
-import { FakeFunction, SimpleFaker } from "../src";
+import { FakeFunction, SchemaFaker } from "../src";
 
 test("callback type", () => {
-  const faker = new SimpleFaker("en", 2);
-  const anotherFaker = new SimpleFaker("en", 10);
+  const faker = new SchemaFaker("en", 2);
+  const anotherFaker = new SchemaFaker("en", 10);
 
   expect(() => faker.fake("MyCategory")).toThrow(TypeError);
   expect(() => faker.fake("MyInteger")).toThrow(TypeError);
@@ -28,13 +28,13 @@ test("callback type", () => {
   expect(() => anotherFaker.fake("MyInteger()")).toThrow(TypeError);
   expect(() => anotherFaker.fake("MyInteger(100,)")).toThrow(TypeError);
   expect(() => anotherFaker.fake("MyInteger2(100,200")).toThrow(TypeError);
-  expect(anotherFaker.fake("MyInteger2")).toBe(3);
-  expect(anotherFaker.fake("MyInteger(106,106)")).toBe(106);
+  expect(anotherFaker.fake("myinteger2")).toBe(3);
+  expect(anotherFaker.fake("myinteger(106,106)")).toBe(106);
   expect(anotherFaker.fake("MyInteger2(5,10)")).toBe(5 + 10);
 });
 
 test("callback type", () => {
-  const faker = new SimpleFaker("fr", 2);
+  const faker = new SchemaFaker("fr", 2);
 
   expect(() => faker.fake("ErrorType")).toThrow(TypeError);
   faker.addType("ErrorType", () => {
@@ -42,6 +42,6 @@ test("callback type", () => {
     return "Error" + t.charAt(0).toUpperCase() + t.slice(1);
   });
 
-  expect(faker.fake("ErrorType")).toBeTruthy();
+  expect(faker.fake("errortype")).toBeTruthy();
   expect(faker.fake("ErrorType")).toMatch(/^Error[A-Z].+$/);
 });

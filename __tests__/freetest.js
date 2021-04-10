@@ -1,8 +1,8 @@
-const { SimpleFaker } = require("../dist");
+const { SchemaFaker } = require("../dist");
 const fs = require("fs");
 const path = require("path");
 
-const faker = new SimpleFaker("ja");
+const faker = new SchemaFaker("ja");
 test("test dist", () => {
   expect(faker).toBeDefined();
 
@@ -73,7 +73,7 @@ test("test dist", () => {
     money: "{{finance.amount}} millions USD",
     crypto: "finance.bitcoinAddress",
     nested: {
-      prop1: "phrase", // simple-faker knows that phase belongs to hacker.phrase
+      prop1: "phrase", // schema-faker knows that phase belongs to hacker.phrase
       tags: ["word", "words(2,2)"],
       comments: [
         { commentId: "integer(1000,9999)", comment: "html(1,3)" },

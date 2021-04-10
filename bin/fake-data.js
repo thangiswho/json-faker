@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { SimpleFaker } = require("../dist");
+const { SchemaFaker } = require("../dist");
 const fs = require("fs");
 const yargs = require("yargs");
 
@@ -23,7 +23,7 @@ const fakeData = function (argv) {
   }
 
   try {
-    const faker = new SimpleFaker(argv.locale, argv.length);
+    const faker = new SchemaFaker(argv.locale, argv.length);
     const api = JSON.stringify(faker.fakeApi(schema), null, 2);
 
     if (argv.output.length) {

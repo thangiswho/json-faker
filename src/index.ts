@@ -1,2 +1,2 @@
-export { SimpleFaker, Schema, ApiSchema, FakeFunction } from "./simple-faker";
+export { SchemaFaker, Schema, ApiSchema, FakeFunction } from "./faker";
 export { fakeRouter } from "./fake-router";

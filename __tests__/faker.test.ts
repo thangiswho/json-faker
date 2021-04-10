@@ -1,9 +1,9 @@
-import { SimpleFaker } from "../src";
+import { SchemaFaker } from "../src";
 
-const faker = new SimpleFaker("en", 10);
-const fakerJa = new SimpleFaker("ja", 10);
+const faker = new SchemaFaker("en", 10);
+const fakerJa = new SchemaFaker("ja", 10);
 
-test("SimpleFaker Constructor", () => {
+test("SchemaFaker Constructor", () => {
   expect(faker).toBeDefined();
   expect(fakerJa).toBeDefined();
 });

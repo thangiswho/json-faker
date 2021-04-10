@@ -1,6 +1,6 @@
-import { SimpleFaker } from "../src";
+import { SchemaFaker } from "../src";
 
-const faker = new SimpleFaker("en", 2);
+const faker = new SchemaFaker("en", 2);
 
 for (const [prop, obj] of Object.entries(faker.faker)) {
   if (prop !== "mersenne" && typeof obj === "object") {

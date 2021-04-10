@@ -1,4 +1,4 @@
-import { SimpleFaker, Schema, ApiSchema } from "../src";
+import { SchemaFaker, Schema, ApiSchema } from "../src";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -46,7 +46,7 @@ const superNestedSchema: Schema = {
 };
 
 test("fakeSchema simple", () => {
-  const faker = new SimpleFaker();
+  const faker = new SchemaFaker();
 
   const user = faker.fakeSchema(userSchema);
   for (const [prop, value] of Object.entries(userSchema)) {
@@ -65,7 +65,7 @@ test("fakeSchema simple", () => {
 
 test("fakeSchema nested", () => {
   const dataLength = 2;
-  const faker = new SimpleFaker("ja", dataLength);
+  const faker = new SchemaFaker("ja", dataLength);
 
   const superNested: Schema = faker.fakeSchema(superNestedSchema);
   const nested: Schema = superNested["nested"] as Schema;
@@ -90,7 +90,7 @@ test("fakeSchema nested", () => {
 
 test("fakeApi", () => {
   const dataLength = 15;
-  const faker = new SimpleFaker("ja", 15);
+  const faker = new SchemaFaker("ja", 15);
   const apiSchema: ApiSchema = {
     Users: userSchema,
     Hobbies: hobbySchema,
@@ -140,7 +140,7 @@ test("fakeApi more", () => {
   ];
 
   for (let i = 1; i < 11; i++) {
-    const faker = new SimpleFaker("de", i);
+    const faker = new SchemaFaker("de", i);
     apiSchemas.forEach((schema) => {
       const api = faker.fakeApi(schema);
       expect(Object.keys(api).length).toBe(Object.keys(schema).length);

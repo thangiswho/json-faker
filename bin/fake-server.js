@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { SimpleFaker, fakeRouter } = require("../dist");
+const { SchemaFaker, fakeRouter } = require("../dist");
 const path = require("path");
 const yargs = require("yargs");
 const express = require("express");

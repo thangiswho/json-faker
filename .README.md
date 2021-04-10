@@ -1,7 +1,7 @@
-# simple-faker
-[simple-faker](https://github.com/thangiswho/simple-faker) generates massive amount of json fake data with **zero coding**, based on data type and json schema.
+# schema-faker
+[schema-faker](https://github.com/thangiswho/schema-faker) generates massive amount of json fake data with **zero coding**, based on data type and json schema.
 It is also built with a simple faker server to serve mockup REST API.
-`simple-faker` uses [faker.js](https://github.com/Marak/faker.js) to generate fake data.
+`schema-faker` uses [faker.js](https://github.com/Marak/faker.js) to generate fake data.
 
 ```bash
 $ yarn fake-server -b /api/v1 schema.json
@@ -12,27 +12,27 @@ The simple faker server is running at http://localhost:3000/api/v1
 
 ## Getting started
 
-Install simple-faker
+Install schema-faker
 
 ```bash
 # Using yarn
-yarn add --dev @thangiswho/simple-faker
+yarn add --dev schema-faker
 # Using npm
-npm install --save-dev @thangiswho/simple-faker
+npm install --save-dev schema-faker
 ```
 
 **Typescript usage**
 ```typescript
-import {SimpleFaker} from "simple-faker";
+import { SchemaFaker } from "schema-faker";
 ```
 **Javacript usage**
 ```javascript
-const {SimpleFaker} = require("simple-faker");
+const { SchemaFaker } = require("schema-faker");
 ```
 
 ```javascript
-const faker = new SimpleFaker(); // The default locale is en, data length is 10
-// const faker = new SimpleFaker("ja", 20);
+const faker = new SchemaFaker(); // The default locale is en, data length is 10
+// const faker = new SchemaFaker("ja", 20);
 faker.fake("integer"); // return 75
 faker.fake("integer(10,99)"); // return 2 digits number
 faker.fake("html"); // return html string block
@@ -64,7 +64,7 @@ faker.fakeApi({
 });
 /**
  * return json-server compatible mockup json
- * Data length of each data set is defined when initialized with new SimpleFaker(locale, dataLength)
+ * Data length of each data set is defined when initialized with new SchemaFaker(locale, dataLength)
  * {
  *   "Users": [
  *     {
@@ -98,7 +98,7 @@ faker.fakeApi({
 
 With the cli **fake-server**, you can *simply create* a mock REST API with **zero coding**.
 Firstly, create a *schema.json* file with content is as same as the schema passed to `faker.fakeApi(schema).`
-Please refer to the sample schema: [schema.json](https://raw.githubusercontent.com/thangiswho/simple-faker/main/__tests__/schema.json).
+Please refer to the sample schema: [schema.json](https://raw.githubusercontent.com/thangiswho/schema-faker/main/__tests__/schema.json).
 
 ```bash
 # fake-server requires express
@@ -155,9 +155,9 @@ json-server mockupdb.json
 ### Basic Types
 
 ```javascript
-const faker = new SimpleFaker("en", 10); // The default locale is en, data length is 10
-// const faker = new SimpleFaker();
-// const faker = new SimpleFaker("ja", 20);
+const faker = new SchemaFaker("en", 10); // The default locale is en, data length is 10
+// const faker = new SchemaFaker();
+// const faker = new SchemaFaker("ja", 20);
 faker.setLocale("de"); // change locale after initialized
 faker.setLength(15);  // change data length after initialized
 
@@ -180,7 +180,7 @@ faker.fake("html(2,4)"); // return a fake html paragraphs with number of paragra
 ```
 
 ### faker.js Types
-[simple-faker](https://github.com/thangiswho/simple-faker) supports all types from [faker.js](https://github.com/Marak/faker.js)
+[schema-faker](https://github.com/thangiswho/schema-faker) supports all types from [faker.js](https://github.com/Marak/faker.js)
 
 **Usage**: faker.fake(`${type}`) or faker.fake(`${group}.${type}`).
 With some specific types which have one numeric argument, such as words, paragraphs, you can use the following api:
@@ -189,16 +189,16 @@ faker.fake(`typename(${min},${max})`)
 faker.fake(`group.typename(${min},${max})`)
 ```
 
-Basically, [simple-faker](https://github.com/thangiswho/simple-faker) will try to find all grand-children properties of faker.js, it will call faker.js if there is any grand-child properties found.
-[simple-faker](https://github.com/thangiswho/simple-faker) also supports faker.js' mustache format.
+Basically, [schema-faker](https://github.com/thangiswho/schema-faker) will try to find all grand-children properties of faker.js, it will call faker.js if there is any grand-child properties found.
+[schema-faker](https://github.com/thangiswho/schema-faker) also supports faker.js' mustache format.
 
 ```javascript
 faker.fake("address.city"); // same as faker.js's faker.address.city()
-// simple-faker is smart to find city is property of address
+// schema-faker is smart to find city is property of address
 faker.fake("city"); // same as faker.js's faker.address.city()
 
 faker.fake("lorem.words(2,5)"); // same as faker.js's faker.lorem.words(n) with 2 <= n <= 5
-// simple-faker is smart to find words is property of lorem
+// schema-faker is smart to find words is property of lorem
 faker.fake("words"); // same as faker.js's faker.lorem.words()
 faker.fake("{{name.lastName}} {{name.firstName}} lives in {{address.country}}");
 ```
@@ -215,7 +215,7 @@ const accountSchema = {
   money: "{{finance.amount}} millions USD",
   crypto: "finance.bitcoinAddress",
   nested: {
-    prop1: "phrase", // simple-faker knows that phase belongs to hacker.phrase
+    prop1: "phrase", // schema-faker knows that phase belongs to hacker.phrase
     tags: ["word", "words(2,2)"],
     comments: [
       {commentId: "integer(1000,9999)", comment: "html(1,3)"},
@@ -281,13 +281,13 @@ faker.fakeApi({
 You can create your own mockup server as the following sample code.
 
 ```javascript
-const { SimpleFaker } = require("simple-faker");
+const { SchemaFaker } = require("schema-faker");
 const express = require("express");
 const userSchema = {id: "integer", username: "username", email: "email"};
 // or const userSchema = readSchemaFile(argv.schema);
 
 const runServer = function(argv) {
-  const faker = new SimpleFaker(argv.locale, argv.length);
+  const faker = new SchemaFaker(argv.locale, argv.length);
   const app = express();
 
   app.get(`/users`, (req, res) => {

@@ -22,7 +22,7 @@ interface FakerWrapper extends Faker.FakerStatic {
   [group: string]: FakeTypes | any;
 }
 
-export class SimpleFaker {
+export class SchemaFaker {
   protected callbackTypes: FakeTypes = {};
   protected locale: string;
   protected dataLength: number;
@@ -206,7 +206,7 @@ export class SimpleFaker {
     /* This faker type */
     const funcName = ("fake" +
       t.charAt(0).toUpperCase() +
-      t.slice(1)) as keyof SimpleFaker;
+      t.slice(1)) as keyof SchemaFaker;
     if (typeof this[funcName] === "function") {
       const func = (this[funcName] as FakeFunction).bind(this);
       return isRange ? func(min, max) : func();

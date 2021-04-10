@@ -3,8 +3,8 @@
 const path = require("path");
 const fs = require("fs");
 const README_FILE = "README.md";
-const { SimpleFaker } = require("../dist");
-const faker = new SimpleFaker();
+const { SchemaFaker } = require("../dist");
+const faker = new SchemaFaker();
 
 let readme = fs
   .readFileSync(path.resolve(__dirname, "..", "." + README_FILE))

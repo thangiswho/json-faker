@@ -1,7 +1,7 @@
 {
-  "name": "@thangiswho/simple-faker",
-  "version": "1.0.4",
-  "description": "simple-faker generates massive amount of json fake data with zero coding. It is also built with a simple faker server to serve mockup REST API.",
+  "name": "schema-faker",
+  "version": "1.0.0",
+  "description": "schema-faker generates massive amount of json fake data with zero coding. It is also built with a simple faker server to serve mockup REST API.",
   "main": "./dist/index.js",
   "bin": {
     "fake-data": "./bin/fake-data.js",
@@ -19,11 +19,11 @@
     "prepare": "yarn run build",
     "preversion": "yarn run test",
     "version": "yarn run build:format && git add -A src",
-    "postversion": "git push --tags && yarn publish . --tag $npm_package_version && git push && echo \" version $npm_package_version was successfully released!\""
+    "postversion": "git push --tags && yarn publish . && git push && echo \" version $npm_package_version was successfully released!\""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thangiswho/simple-faker.git"
+    "url": "git+https://github.com/thangiswho/schema-faker.git"
   },
   "files": [
     "dist",
@@ -44,9 +44,9 @@
   "author": "thangiswho <thangiswho@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/thangiswho/simple-faker/issues"
+    "url": "https://github.com/thangiswho/schema-faker/issues"
   },
-  "homepage": "https://github.com/thangiswho/simple-faker#readme",
+  "homepage": "https://github.com/thangiswho/schema-faker#readme",
   "devDependencies": {
     "@types/express": "^4.17.11",
     "@types/faker": "^5.5.0",

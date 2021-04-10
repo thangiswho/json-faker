@@ -5,7 +5,7 @@ import {
   RequestHandler,
   Router,
 } from "express";
-import { SimpleFaker, ApiSchema } from "./simple-faker";
+import { SchemaFaker, ApiSchema } from "./faker";
 import * as fs from "fs";
 
 interface FakerRouterOption {
@@ -47,7 +47,7 @@ export const fakeRouter = (
   if (typeof apiShema !== "object")
     throw TypeError("api schema must be object");
 
-  const faker = new SimpleFaker(options?.locale, options?.length);
+  const faker = new SchemaFaker(options?.locale, options?.length);
   const router = Router();
   router.use(cors);
 
