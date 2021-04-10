@@ -1,4 +1,4 @@
-import {
+import type {
   Request,
   Response,
   NextFunction,
@@ -48,10 +48,11 @@ export const fakeRouter = (
     throw TypeError("api schema must be object");
 
   const faker = new SchemaFaker(options?.locale, options?.length);
-  const router = Router();
+  const express = require("express");
+  const router: Router = express.Router();
   router.use(cors);
 
-  router.get("/", (req, res) => {
+  router.get("/", (req: Request, res: Response) => {
     let body =
       "<h2>A simple faker server!</h2>" +
       "<p><b>Schemas</b>: " +
