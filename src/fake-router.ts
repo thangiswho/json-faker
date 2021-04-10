@@ -102,36 +102,36 @@ export const fakeRouter = (
 
     router.get(`/${route}`, (req: Request, res: Response) => {
       const data = faker.fakeApi({ prop: schema });
-      res.send(data.prop);
+      res.json(data.prop);
     });
     router.get(`/${route}/:id`, (req: Request, res: Response) => {
       const data = faker.fakeSchema(schema);
       data.id = req.params.id;
-      res.send(data);
+      res.json(data);
     });
     router.post(`/${route}`, (req: Request, res: Response) => {
       const data = faker.fakeSchema(schema);
-      res.send(data);
+      res.json(data);
     });
     router.post(`/${route}/:id`, (req: Request, res: Response) => {
       const data = faker.fakeSchema(schema);
       data.id = req.params.id;
-      res.send(data);
+      res.json(data);
     });
     router.put(`/${route}/:id`, (req: Request, res: Response) => {
       const data = faker.fakeSchema(schema);
       data.id = req.params.id;
-      res.send(data);
+      res.json(data);
     });
     router.delete(`/${route}/:id`, (req: Request, res: Response) => {
-      res.send({ deleted: true, id: req.params.id });
+      res.json({ deleted: true, id: req.params.id });
     });
 
     router.all(`/${route}/code/:code`, (req: Request, res: Response) => {
       let code = parseInt(req.params.code, 10);
       if (typeof code !== "number" || code < 200 || code > 500) code = 500;
 
-      res.status(code).send({
+      res.status(code).json({
         code,
         message: faker.fake("lorem.sentence"),
         errors: {
