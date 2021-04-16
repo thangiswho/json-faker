@@ -1,4 +1,9 @@
 # schema-faker
+
+![Build Status](https://img.shields.io/travis/com/thangiswho/schema-faker)
+![Coverage Status](https://coveralls.io/repos/github/thangiswho/schema-faker/badge.svg)
+[![npm](https://img.shields.io/npm/dw/schema-faker)](https://www.npmjs.com/package/schema-faker)
+
 [schema-faker](https://github.com/thangiswho/schema-faker) generates massive amount of json fake data with **zero coding**, based on data type and json schema.
 It is also built with a simple faker server to serve mockup REST API.
 `schema-faker` uses [faker.js](https://github.com/Marak/faker.js) to generate fake data.
