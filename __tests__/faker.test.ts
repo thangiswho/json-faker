@@ -6,6 +6,11 @@ const fakerJa = new SchemaFaker("ja", 10);
 test("SchemaFaker Constructor", () => {
   expect(faker).toBeDefined();
   expect(fakerJa).toBeDefined();
+  expect(faker.getFaker()).toBeDefined();
+  expect(fakerJa.getFaker()).toBeDefined();
+  expect(() => new SchemaFaker("abc", 10)).toThrow();
+
+  expect(faker.getFaker().fake("{{name.firstName}}")).toBeDefined();
 });
 
 test("fakeInteger", () => {
@@ -127,6 +132,36 @@ test("fakerjs", () => {
 test("Unknown type", () => {
   expect(() => faker.fake("unknown")).toThrow(TypeError);
   expect(() => faker.fake("category")).toThrow(TypeError);
-  expect(() => faker.fake("address")).toThrow(TypeError);
+
   expect(faker.fake("address.city")).toBeDefined();
+  expect(faker.fake("{{address.city}}")).toBeDefined();
+  expect(() => faker.fake("address")).toThrow(TypeError);
+  expect(() => faker.fake("addRess.city")).toThrow(TypeError);
+  expect(() => faker.fake("address.ciTy")).toThrow(TypeError);
+  expect(() => faker.fake("{{address.city}} {{address.ciTy}}")).toThrow(
+    TypeError
+  );
+});
+
+test("TypeError", () => {
+  let t: any = 15;
+  expect(() => faker.fake(t)).toThrow(TypeError);
+  expect(() => faker.fakeSchema(t)).toThrow(TypeError);
+  expect(() => faker.fakeApi(t)).toThrow(TypeError);
+
+  t = { id: "integer" };
+  expect(() => faker.fake(t)).toThrow(TypeError);
+  expect(() => faker.fakeApi(t)).toThrow(TypeError);
+
+  t = ["integer", "string"];
+  expect(() => faker.fake(t)).toThrow(TypeError);
+  expect(() => faker.fakeApi(t)).toThrow(TypeError);
+
+  t = { id: "integer", name: "string", value: 2 };
+  expect(() => faker.fakeSchema(t)).toThrow(TypeError);
+  expect(() => faker.fakeApi(t)).toThrow(TypeError);
+
+  t = { users: { id: "integer", name: "string", value: ["string", 2] } };
+  expect(() => faker.fakeSchema(t)).toThrow(TypeError);
+  expect(() => faker.fakeApi(t)).toThrow(TypeError);
 });
