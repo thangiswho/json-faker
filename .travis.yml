@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+ - "node"
+cache: yarn
+
+install:
+  - yarn install
+
+script:
+  - yarn build
+  - yarn test
+
+after_success: yarn run test:coverage
