@@ -31,10 +31,9 @@ export class SchemaFaker {
 
   constructor(locale = "en", dataLength = 10) {
     this.callbackTypes = {};
-    this.locale = locale;
     this.dataLength = dataLength;
-    this.faker = require("faker");
-    this.faker.setLocale(locale);
+    this.locale = locale;
+    this.faker = require(`faker/locale/${locale}`);
   }
 
   setLength(dataLength: number): void {
@@ -43,7 +42,7 @@ export class SchemaFaker {
 
   setLocale(locale: string): void {
     this.locale = locale;
-    this.faker.setLocale(locale);
+    this.faker = require(`faker/locale/${locale}`);
   }
 
   getFaker(): Faker.FakerStatic {

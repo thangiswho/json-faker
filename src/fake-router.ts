@@ -9,9 +9,15 @@ import { SchemaFaker, ApiSchema } from "./faker";
 import * as fs from "fs";
 
 interface FakerRouterOption {
-  locale: string;
-  length: number;
+  locale?: string;
+  length?: number;
 }
+
+const getInt = (id: any) => {
+  if (typeof id === "number") return id;
+  const _id = parseInt(id, 10);
+  return isNaN(_id) ? id : _id;
+};
 
 const cors: RequestHandler = (
   req: Request,
@@ -25,13 +31,7 @@ const cors: RequestHandler = (
     "Content-Type, Authorization, access_token"
   );
   res.header("Content-Type", "application/json");
-
-  // intercept OPTIONS method
-  if ("OPTIONS" === req.method) {
-    res.send(200);
-  } else {
-    next();
-  }
+  next();
 };
 
 export const fakeRouter = (
@@ -40,7 +40,7 @@ export const fakeRouter = (
 ): Router => {
   if (typeof apiShema === "string") {
     if (!fs.existsSync(apiShema)) {
-      throw TypeError(`schema file [${apiShema}] does not exist!`);
+      throw Error(`schema file [${apiShema}] does not exist!`);
     }
     apiShema = JSON.parse(fs.readFileSync(apiShema).toString());
   }
@@ -107,7 +107,7 @@ export const fakeRouter = (
     });
     router.get(`/${route}/:id`, (req: Request, res: Response) => {
       const data = faker.fakeSchema(schema);
-      data.id = req.params.id;
+      data.id = getInt(req.params.id);
       res.json(data);
     });
     router.post(`/${route}`, (req: Request, res: Response) => {
@@ -116,16 +116,16 @@ export const fakeRouter = (
     });
     router.post(`/${route}/:id`, (req: Request, res: Response) => {
       const data = faker.fakeSchema(schema);
-      data.id = req.params.id;
+      data.id = getInt(req.params.id);
       res.json(data);
     });
     router.put(`/${route}/:id`, (req: Request, res: Response) => {
       const data = faker.fakeSchema(schema);
-      data.id = req.params.id;
+      data.id = getInt(req.params.id);
       res.json(data);
     });
     router.delete(`/${route}/:id`, (req: Request, res: Response) => {
-      res.json({ deleted: true, id: req.params.id });
+      res.json({ deleted: true, id: getInt(req.params.id) });
     });
 
     router.all(`/${route}/code/:code`, (req: Request, res: Response) => {
